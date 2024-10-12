@@ -1,0 +1,6 @@
+spring:
+  minio:
+    minio-url: http://127.0.0.1:9000
+    login-key: admin
+    password-key: admin123
+    bucket-name: minioBucket

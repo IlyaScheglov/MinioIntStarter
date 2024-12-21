@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 public class MinioStarterConfig {
 
     @Bean
-    @ConditionalOnMissingBean
     public MinioService minioService(MinioProperties minioProperties) {
         return new MinioService(minioProperties);
     }

@@ -27,7 +27,6 @@
         <url/>
     </scm>
 
-
     <distributionManagement>
         <repository>
             <id>github</id>

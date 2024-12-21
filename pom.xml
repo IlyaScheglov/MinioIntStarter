@@ -31,7 +31,7 @@
         <repository>
             <id>github</id>
             <name>GitHub IlyaScheglov</name>
-            <url>https://maven.pkg.github.com/IlyaScheglov/minio-easy-integration</url>
+            <url>https://maven.pkg.github.com/IlyaScheglov/MinioIntStarter</url>
         </repository>
     </distributionManagement>
 

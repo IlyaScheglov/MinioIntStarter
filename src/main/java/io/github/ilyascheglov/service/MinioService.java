@@ -6,6 +6,7 @@ import io.minio.*;
 import io.minio.http.Method;
 
 import java.io.InputStream;
+import java.util.Optional;
 import java.util.UUID;
 
 public class MinioService {
@@ -16,6 +17,8 @@ public class MinioService {
     private final MinioClient minioClient;
     private final String bucketName;
 
+    private static final String DEFAULT = "http://127.0.0.1:9090/api/v1/buckets/%s/objects/download?preview=true&prefix=%s&version_id=null";
+
     public MinioService(MinioProperties minioProperties) {
         this.minioClient = MinioClient.builder()
                 .endpoint(minioProperties.getMinioUrl())
@@ -25,7 +28,7 @@ public class MinioService {
 
         try {
             if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())) {
-                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).objectLock(false).build());
             }
         } catch (Exception e) {
             throw new MinioException("Error creating bucket because: " + e.getMessage());
@@ -40,14 +43,22 @@ public class MinioService {
                         .stream(file, OBJECT_SIZE, PART_SIZE)
                         .contentType(contentType)
                         .build());
+            return savedName;
+        } catch (Exception e) {
+            throw new MinioException("Error putting file to minio because: " + e.getMessage());
+        }
+    }
 
+    public String getUrl(String objectName) {
+        try {
             return minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
                     .method(Method.GET)
                     .bucket(bucketName)
                     .object(objectName)
+                    .expiry(60 * 60)
                     .build());
         } catch (Exception e) {
-            throw new MinioException("Error putting file to minio because: " + e.getMessage());
+            return "";
         }
     }
 
